@@ -9,7 +9,7 @@ class main():
     def __init__(self):
         self.key='l8N2iooyp07M9IWa'
         self.url='http://apichlove.com'
-
+    # 这是一个yellow视频软件的邀请过程，分析可看，oo没有，忘记写了
     def x_t(self,url):
         a = []
         b = []
@@ -58,10 +58,14 @@ class main():
         Json = json.dumps({"device_no": device_id, "device_type": "A", "token": token, "version": "1.0.0"})
         return aes.encrypt(Json, self.key)
 
+    # 入口在此处
+    # 邀请码，行数，在main.py->register中
     def parent(self, code,x):
         token, device_id = self.token()
         if not ( token or device_id):
-            self._signal.emit('----'.join(map(str, ['','', 'error', x])))
+            # 你可以将一些提示信息提交到table1，x代表他在第几行
+            self._signal.emit([device_id, '', '', 'error', x])
+
             return
         data = {'data': aes.encrypt(json.dumps({'code': code}), self.key), 'handshake': 'v20200429'}
         header = {'X-JSL-API-AUTH': self.x_t('/app/api/user/bindcode'),
@@ -72,6 +76,8 @@ class main():
         except Exception as e:
             self._signal.emit([device_id,'','','error', x])
             return
+        # 同样你也可以提交一些需要让使用这知道的输出,append即追加到log输出框，使用html
+        # self._call_html.append('<font color="red" size="3">end--></font>')
         self._signal.emit([device_id, '', '', 'succes', x]) if result['code'] == 200 else self._signal.emit([device_id, '', '', 'error', x])
         # print(result)
         # self._signal.emit([device_id, '', '', 'error', x])
